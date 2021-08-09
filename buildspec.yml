@@ -8,8 +8,3 @@ phases:
 artifacts:
   files:
     - "**/*"
-
-    aws cloudformation deploy \
-  --template-file ecs-pipeline.yml \
-  --stack-name example-codepipeline \
-  --capabilities CAPABILITY_IAM
