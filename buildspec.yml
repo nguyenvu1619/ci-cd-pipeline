@@ -4,6 +4,7 @@ phases:
   build:
     commands:
       - echo "It works!"
+      - echo $CODEBUILD_WEBHOOK_HEAD_REF
 
 artifacts:
   files:
