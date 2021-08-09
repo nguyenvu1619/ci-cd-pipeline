@@ -73,7 +73,7 @@ Resources:
                 Provider: "S3"
               Configuration:
                 S3Bucket: !Ref s3Bucket
-                S3ObjectKey: 'code-pipeline-artifacttttttttttt'
+                S3ObjectKey: 'S3KeyNameSource'
               Name: "Source"
               OutputArtifacts:
                 - Name: "Source"
