@@ -1,0 +1,98 @@
+
+Resources:
+  IamRoleCodePipeline:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action:
+              - "sts:AssumeRole"
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "codepipeline.amazonaws.com"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+      Path: "/"
+  IamRoleCodeBuild:
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action:
+              - "sts:AssumeRole"
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "codebuild.amazonaws.com"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+      Path: "/"
+    Type: "AWS::IAM::Role"
+  CodeBuildProjectSource:
+    DependsOn:
+      - "IamRoleCodeBuild"
+    Properties:
+      Artifacts:
+        Location: !Ref s3Bucket
+        Name: 'S3KeyNameSource'
+        Packaging: "ZIP"
+        Type: "S3"
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/ubuntu-base:14.04"
+        Type: "LINUX_CONTAINER"
+      ServiceRole: !GetAtt "IamRoleCodeBuild.Arn"
+      Source:
+        Auth:
+          Type: "OAUTH"
+        GitCloneDepth: 1
+        Location: 'https://github.com/nguyenvu1619/ci-cd-pipeline'
+        Type: 'GITHUB'
+      TimeoutInMinutes: 5
+      Triggers:
+        Webhook: true
+    Type: "AWS::CodeBuild::Project"
+  AppPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    DependsOn:
+      - "IamRoleCodePipeline"
+    Properties:
+      Name: 'ServiceName'
+      RoleArn: !GetAtt "IamRoleCodePipeline.Arn"
+      ArtifactStore:
+        Type: S3
+        Location: !Ref s3Bucket
+      Stages: 
+        - Actions:
+            - ActionTypeId:
+                Category: "Source"
+                Owner: "AWS"
+                Version: "1"
+                Provider: "S3"
+              Configuration:
+                S3Bucket: !Ref s3Bucket
+                S3ObjectKey: 'code-pipeline-artifacttttttttttt'
+              Name: "Source"
+              OutputArtifacts:
+                - Name: "Source"
+              RunOrder: 1
+          Name: "Source"
+        - Actions:
+            - ActionTypeId:
+                Category: "Approval"
+                Owner: "AWS"
+                Version: "1"
+                Provider: "Manual"
+              InputArtifacts: []
+              Name: "Approve"
+              OutputArtifacts: []
+              RunOrder: 1
+          Name: "Approve"
+      RestartExecutionOnUpdate: true
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      AccessControl: Private
+      BucketName: 'code-pipeline-artifacttttttttttt'
