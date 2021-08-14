@@ -1,11 +1,17 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - echo Install stage
+    finally:
+      - echo ---------- Install stage ----------
   build:
     commands:
       - echo "It works!"
       - echo $CODEBUILD_WEBHOOK_HEAD_REF
       - echo $CODEBUILD_WEBHOOK_TRIGGER
+      - ls
 
 artifacts:
   files:

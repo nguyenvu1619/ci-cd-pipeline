@@ -1,4 +1,8 @@
-
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  email:
+    Description: 
+    Type: AWS::SSM::Parameter::Value<String>
 Resources:
   IamRoleCodePipeline:
     Type: "AWS::IAM::Role"
@@ -98,3 +102,8 @@ Resources:
       VersioningConfiguration:
         Status: "Enabled"
       BucketName: 'code-pipeline-artifacttttttttttt'
+  ApprovalNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref email
