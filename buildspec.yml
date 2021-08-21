@@ -1,14 +1,9 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      nodejs: 12.x
-    commands:
-      - npm install
   pre_build: 
     commands:
-      - echo npm run test
+      - echo npm -v
   build:
     commands:
       - echo "It workss!"
