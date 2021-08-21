@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  email:
-    Description: 
+  EmailApproval:
+    Description: Email of Approver
     Type: AWS::SSM::Parameter::Value<String>
 Resources:
   IamRoleCodePipeline:
@@ -89,6 +89,8 @@ Resources:
                 Owner: "AWS"
                 Version: "1"
                 Provider: "Manual"
+              Configuration:
+                NotificationArn: !Ref ApprovalNotificationTopic
               InputArtifacts: []
               Name: "Approve"
               OutputArtifacts: []
@@ -101,9 +103,10 @@ Resources:
       AccessControl: Private
       VersioningConfiguration:
         Status: "Enabled"
-      BucketName: 'code-pipeline-artifacttttttttttt'
+      BucketName: 'test-pipeline-artifactt'
   ApprovalNotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
       Subscription:
-        - Endpoint: !Ref email
+        - Endpoint: !Ref EmailApproval
+          Protocol: 'email'

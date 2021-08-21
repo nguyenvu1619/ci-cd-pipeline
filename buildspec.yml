@@ -2,10 +2,14 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      - nodejs: 14
     commands:
-      - echo Install stage
-    finally:
-      - echo ---------- Install stage ----------
+      - npm install -g typescript
+      - npm install
+  pre_build: 
+    commands:
+      - echo npm run test
   build:
     commands:
       - echo "It works!"
