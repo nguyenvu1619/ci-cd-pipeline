@@ -3,7 +3,7 @@ version: 0.2
 phases:
   pre_build: 
     commands:
-      - echo npm -v
+      - npm -v
   build:
     commands:
       - echo "It workss!"
